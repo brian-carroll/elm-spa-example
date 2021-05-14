@@ -103,6 +103,7 @@ decoder maybeCred =
     Decode.succeed Internals
         |> required "id" CommentId.decoder
         |> required "body" Decode.string
-        |> required "createdAt" Iso8601.decoder
+        --  Iso8601.decoder doesn't work in our Wasm implementation, because Time.Posix integers need more than 32 bits
+        |> required "createdAt" (Decode.succeed (Time.millisToPosix 0))
         |> required "author" (Author.decoder maybeCred)
         |> Decode.map Comment

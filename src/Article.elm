@@ -196,7 +196,8 @@ metadataDecoder =
         |> required "description" (Decode.map (Maybe.withDefault "") (Decode.nullable Decode.string))
         |> required "title" Decode.string
         |> required "tagList" (Decode.list Decode.string)
-        |> required "createdAt" Iso8601.decoder
+        --  Iso8601.decoder doesn't work in our Wasm implementation, because Time.Posix integers need more than 32 bits
+        |> required "createdAt" (Decode.succeed (Time.millisToPosix 0))
         |> required "favorited" Decode.bool
         |> required "favoritesCount" Decode.int
 
